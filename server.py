@@ -1,4 +1,5 @@
 from concurrent import futures
+from binary_gap import count_gap
 import time
 
 import grpc
@@ -7,21 +8,10 @@ import binary_gap_pb2_grpc
 
 _TIME = 60 * 60 * 24
 
-class BinaryGapServicer (binary_gap_pb2_grpc.BinaryGapServiceServicer):
+class BinaryGapServicer (binary_gap_pb2_grpc.BinaryGapServiceServicer): 
     def BinaryGap(self, request, context):
         response = binary_gap_pb2.BinaryGapResponse()
-        binary = bin(request.number)
-        finalMax = 0
-        currentMax = 0
-
-        for i in range(len(binary)) :
-            currentMax = 0
-            while binary[i] == '0': 
-                currentMax += 1 
-                i += 1
-            finalMax = max(finalMax, currentMax)
-        
-        response.message = finalMax
+        response.message = count_gap(request.number)
         return response
 
 def main():
